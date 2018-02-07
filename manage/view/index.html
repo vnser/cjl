@@ -1,0 +1,146 @@
+<?php include('top.html');?>
+<style>
+    .online span:hover{
+        color: #1e9fff;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    .headimg{
+        height:30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+    .tj_span{
+        font-size: 14px;
+    }
+</style>
+<div class="container">
+    <?php include('menu.html')?>
+    <div class="container_con">
+
+
+
+        <div class="page-header" style="margin-top: 10px">
+            <p>(剩余卡密-共: <?php echo $cdk_count?>张；余: <?php echo $cdk_n_count?>张)</p>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $proportion?>%">
+                        <span class="sr-only">45% Complete</span>
+                    </div>
+                </div>
+        </div>
+
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <!--<div class="panel-heading">数据统计</div>-->
+            <!--<div class="panel-body">-->
+            <!--</div>-->
+
+            <!-- Table -->
+             <table class="table">
+                <tr>
+                    <th>今日登陆</th>
+                    <th>今日播放量</th>
+                    <th>7天累计使用卡密</th>
+                    <th>注册会员总数</th>
+                    <th>视频总数</th>
+                </tr>
+                 <tr >
+                     <td>
+                         <span class="label label-success">
+                              <?php echo $user_login_count?>
+                         </span>
+
+                     </td>
+                     <td>
+                          <span class="label label-default">
+                            <?php echo $today_pay_num?>
+                          </span>
+                     </td>
+                     <td> <span class="label label-info">
+                         <?php echo $use_7cdk_count?>
+                     </span>
+                     </td>
+                     <td><span class="label label-warning">
+                         <?php echo $reg_count ?>
+                     </span>
+                     </td>
+                     <td><span class="label label-success">
+                         <?php echo $video_count ?>
+                     </span>
+                     </td>
+                 </tr>
+             </table>
+        </div>
+        <div class="list-group" style="padding-bottom: 10px">
+            <a href="#" class="list-group-item disabled">
+                在线会员 <span class="label label-success"> <span id="pNum">0</span>人</span>
+            </a>
+            <a class="list-group-item online" id="online_empty">暂无数据.</a>
+            <div class="online_list"></div>
+        </div>
+
+        <div class="list-group" style="padding-bottom: 10px">
+            <a href="#" class="list-group-item disabled">
+                会员最新登录记录
+            </a>
+            <?php if(!$user_last_login){?>
+            <a class="list-group-item online">暂无数据.</a>
+            <?php } ?>
+            <?php foreach($user_last_login as $v){?>
+            <a href="user.php?search=<?php echo $v['user_id']?>" class="list-group-item">
+                <span style="display: inline-block" class="label label-info">ID: <?php echo $v['user_id']?></span>
+                <span style="display: inline-block;min-width: 120px">(QQ: <img class="headimg" src="http://q2.qlogo.cn/headimg_dl?dst_uin=<?php echo $v['qq']?>&spec=100&url_enc=0&referer=bu_interface&term_type=P"> <?php echo $v['qq']?:'未绑定QQ'?>)</span>
+                <span style="display: inline-block" class="label label-success"> 时间: <?php echo $v['add_time']?></span>
+                 UA: <?php echo $v['ua']?>
+            </a>
+
+            <?php }?>
+        </div>
+        <div class="list-group" style="padding-bottom: 10px">
+            <a href="#" class="list-group-item disabled">
+                点击量最热视频排行.TOP-<?php echo count($video)?>
+            </a>
+            <?php foreach($video as $v){?>
+            <a href="/?so=<?php echo $v['title']?>" class="list-group-item"><?php echo $v['title']?><span class="badge"><?php echo $v['play_num']?></span></a>
+            <?php }?>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(function () {
+        var $onlineEmpty = $('#online_empty'),$pNum = $('#pNum');
+        var timeCollBack = function () {
+            $.post('?do=get_online_user',function (res) {
+                $pNum.text(res.length);
+                if(res.length <= 0){
+                    $onlineEmpty.show();
+                    //return;
+                }else{
+                    $onlineEmpty.hide();
+                }
+                var onlineHtml = '';
+                $.each(res,function (k,v) {
+                    onlineHtml += '<a class="list-group-item online">\n' +
+                        '                  <span onclick="window.open(\'user.php?search='+v.user_id+'\')">' +
+                        '                      <b>[会员]</b>: ' +v.user_id+
+                        '                      <b>[企鹅]</b>: <img class="headimg" src="http://q2.qlogo.cn/headimg_dl?dst_uin='+v.qq+'&spec=100&url_enc=0&referer=bu_interface&term_type=P">' + (v.qq || '未绑定QQ')+
+                        '                  </span>' +
+                        '                  <b>[操作]</b>: ';
+                    if(!v.action){
+                        onlineHtml += '<span>无</span>'
+                    }else{
+                        onlineHtml += '<span onclick="window.open(\'/?so='+v.video_tle+'\')">'+(v.action === 'down'?'下载':'播放')+'视频=>'+v.video_tle+'</span>';
+                    }
+                    onlineHtml +=  '</a>';
+                });
+                $('.online_list').html(onlineHtml);
+            });
+
+        };
+        timeCollBack();
+        setInterval(timeCollBack,5000);
+    });
+</script>
+
+

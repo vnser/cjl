@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title><?php echo $par['title']?></title>
+    <link href="./static/css/thrown.css" rel="stylesheet"/>
+</head>
+<body>
+
+    <div class="protective"></div>
+    <div class="prompt">
+        <div class="content">
+            <p class="title"><?php echo $par['title']?></p>
+            <p class="con"><?php echo $par['content']?> </p>
+        </div>
+        <div class="error_sub">
+            <button onclick="window.location = '<?php echo ($par[btn_url] ? : url()) ?>'"><?php echo $par['btn'] ? : '刷新页面';?></button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<?php include('top.html');?>
+    <script src="../static/laydate/laydate.js" type="application/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            $.post('cdk.php?do=get_face',{},function (res) {
+                $.each(res,function (k,v) {
+//                    console.log(v)
+                    try{
+                        $('[name=face_val]').append('<option value="'+v.time+'">'+v.day+'天('+v.face_count+')</option>');
+                    }catch(e){}
+
+                });
+                $('[name="face_val"] [value="<?php echo $time;?>"]')[0].selected = true;
+            });
+            $.post('cdk.php?do=get_classify',{},function (res) {
+                $.each(res,function (k,v) {
+//                    console.log(v)
+                    try{
+                        $('[name=classify]').append('<option value="'+v.classify+'">'+v.classify+'</option>');
+                    }catch(e){}
+
+                });
+                $('[name="classify"] [value="<?php echo $classify;?>"]')[0].selected = true;
+            });
+
+            try{
+                $('[name="status"] [value="<?php echo $status;?>"]')[0].selected = true;
+            }catch (e){}
+
+
+        });
+        function deCdk(id) {
+            if(confirm('确认要删除该卡密吗？')){
+                location = 'cdk.php?do=del&id='+id;
+            }
+        }
+    </script>
+    <style>
+        @media (min-width: 768px){
+            .container {
+                width: 1400px;
+            }
+        }
+    </style>
+</head>
+<div class="container">
+    <?php include('menu.html')?>
+
+    <div class="container_con">
+        <div style="padding: 15px 5px 0">
+            <form class="form-inline search" >
+                <div class="form-group">
+                    <label>起止时间</label>
+                    <input size="20" name="start_time" class="form-control" value="<?php echo $start_time;?>" placeholder="请选择起止时间" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+                    <!--<input type="text" class="form-control" placeholder="请输入使用者ID,充值CDK">-->
+                </div>
+                <div class="form-group">
+                    <label>截止时间</label>
+                    <input size="20" name="end_time" class="form-control" value="<?php echo $end_time;?>" placeholder="请选择截止时间" onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+                    <!--<input type="text" class="form-control" placeholder="请输入使用者ID,充值CDK">-->
+                </div>
+
+
+                <div class="form-group">
+                    <label>状态</label>
+                    <select name="status" class="form-control">
+                        <option value="">请选择</option>
+                        <option value="1">已使用</option>
+                        <option value="0">未使用</option>
+                    </select>
+                    <!--<input type="text" class="form-control" placeholder="请输入使用者ID,充值CDK">-->
+                </div>
+
+                <div class="form-group">
+                    <label>面值</label>
+                    <select name="face_val" class="form-control">
+                        <option value="">请选择</option>
+                    </select>
+                    <!--<input type="hidden" class="form-control" >-->
+                </div>
+                <div class="form-group">
+                    <label>分类</label>
+                    <select name="classify" class="form-control">
+                        <option value="">请选择</option>
+                    </select>
+                    <!--<input type="hidden" class="form-control" >-->
+                </div>
+                <div class="form-group">
+                    <label>关键字</label>
+                    <input size="20" name="search" class="form-control" value="<?php echo $search;?>" placeholder="请输入使用者ID,充值CDK">
+                </div>
+                <button class="btn btn-info">搜索</button>
+                <button class="btn btn-success" onclick="$('.search').append('<input type=\'hidden\' value=\'out_cdk\' name=\'do\'>').submit();setTimeout(function() {
+                  location.reload();
+                },500)" type="button">导出</button>
+            </form>
+
+        </div>
+
+        <div class="table-responsive">
+
+
+        <table class="table ">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>卡密</th>
+                <th>分类</th>
+                <th>状态</th>
+                <th>时长</th>
+                <th>使用时间</th>
+                <th>添加时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if(!$cdk_list){?>
+            <tr>
+                <td colspan="20">
+                    <div class="alert alert-warning" role="alert">暂无数据.</div>
+                </td>
+            </tr>
+            <?php }?>
+
+            <?php foreach($cdk_list as $v){?>
+            <tr>
+                <td><?php echo $v['cdk_id']?></td>
+                <td><?php echo $v['code']?></td>
+                <td><?php echo $v['classify']?></td>
+                <td><a href="user.php?search=<?php echo $v['use_id'];?>"><?php echo ($v['use_id']?'[会员'.$v['use_id'].']已使用':'未使用')?></a></td>
+                <td><?php echo round($v['time']/(24*3600),1)?>天</td>
+                <td><?php echo $v['use_time']?></td>
+                <td><?php echo $v['add_time']?></td>
+
+                <td>
+                    <button class="btn btn-danger btn-xs" onclick="deCdk('<?php echo $v[cdk_id]?>')">删除</button>
+                </td>
+            </tr>
+            <?php }?>
+            </tbody>
+        </table>
+
+        <div>
+            <?php echo $page->getPageHtml()?>
+        </div>
+        </div>
+    </div>
+</div>

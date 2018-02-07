@@ -1,0 +1,188 @@
+<?php include('top.html');?>
+<script type="text/javascript">
+    $(function () {
+        try{
+            $('[name="status"] [value="<?php echo $status;?>"]')[0].selected = true;
+            $('[name="is_bind_qq"] [value="<?php echo $is_bind_qq;?>"]')[0].selected = true;
+        }catch (e){}
+
+        $('#modify_user').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var user_id = button.data('user-id') // Extract info from data-* attributes
+            var modal = $(this);
+            $('[data-submit=""]').click(function () {
+                var pwd = modal.find('#password').val();
+                if(pwd == ''){
+                    alert('请输入修改密码!');
+                    return false;
+                }
+               $.post('?do=modify',{pwd:pwd,user_id:user_id},function (res) {
+                    alert(res.code);
+                    location.reload();
+               })
+            });
+        });
+        $.post('?do=get_classify',{},function (res) {
+            $.each(res,function (k,v) {
+//                    console.log(v)
+                try{
+                    $('[name=classify]').append('<option value="'+v.classify+'">'+v.classify+'('+v.count+')</option>');
+                }catch(e){}
+
+            });
+            $('[name="classify"] [value="<?php echo $classify;?>"]')[0].selected = true;
+        });
+
+
+    });
+    function delUser(id) {
+        if(confirm('确认要删除该会员吗？')){
+            location = 'user.php?do=del&id='+id;
+        }
+    }
+</script>
+<style>
+    .headimgurl{
+        width: 40px;
+        /*height: 80px;*/
+        border-radius: 50%;
+        cursor: pointer;
+        height: 40px;
+        overflow: hidden;
+        border: 1px solid #ccc;
+    }
+</style>
+</head>
+<div class="container">
+    <?php include('menu.html')?>
+
+    <div class="container_con">
+        <div style="padding: 15px 5px 0">
+            <form class="form-inline search" >
+                <div class="form-group">
+                    <label>是否绑定QQ</label>
+                    <select name="is_bind_qq" class="form-control">
+                        <option value="">请选择</option>
+                        <option value="1">已绑定</option>
+                        <option value="0">未绑定</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>分类</label>
+                    <select name="classify" class="form-control">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>状态</label>
+                    <select name="status" class="form-control">
+                        <option value="">请选择</option>
+                        <option value="1">锁定</option>
+                        <option value="0">未锁定</option>
+                    </select>
+                    <!--<input type="text" class="form-control" placeholder="请输入使用者ID,充值CDK">-->
+                </div>
+
+                <div class="form-group">
+                    <label>关键字</label>
+                    <input size="50" name="search" class="form-control" value="<?php echo $search;?>" placeholder="请输入用户ID、QQ">
+                </div>
+                <button class="btn btn-info">搜索</button>
+            </form>
+
+        </div>
+        <div class="table-responsive">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>QQ</th>
+                <th>头像</th>
+                <th>昵称</th>
+                <th>锁定</th>
+                <th>期限</th>
+                <th>最后登录时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if(!$user_list){?>
+            <tr>
+                <td colspan="20">
+                    <div class="alert alert-warning" role="alert">暂无数据.</div>
+                </td>
+            </tr>
+            <?php }?>
+
+            <?php $qq = [];?>
+            <?php foreach($user_list as $v){?>
+            <?php if($v["qq"]){$qq[] = $v['qq'];}?>
+            <tr data-qq="<?php echo $v['qq']?>">
+                <td><?php echo $v['user_id']?></td>
+                <td><?php echo $v['qq']?></td>
+                <?php $headimgurl = "http://q2.qlogo.cn/headimg_dl?dst_uin={$v['qq']}&spec=100&url_enc=0&referer=bu_interface&term_type=P";?>
+                <td data-headimg><img class="headimgurl" src="<?php echo $headimgurl?>" onclick="window.open('<?php echo $headimgurl;?>')" title="未绑定QQ"></td>
+                <td data-nickname=""></td>
+                <td><?php echo $v['status']?'锁定':'正常'?></td>
+                <td><?php echo $v['expire_time'] == '0000-00-00 00:00:00' ? '无' : round((strtotime($v['expire_time'])-time())/(3600*24),1).'天'?></td>
+                <td><?php echo ($v['last_login_time'])?></td>
+                <td>
+                    <?php if($v['status']){?>
+                    <button class="btn btn-success btn-xs" onclick="location= '?do=unlock&user_id=<?php echo $v[user_id]?>'">解锁</button>
+                    <?php }else{?>
+                    <button class="btn btn-default btn-xs" onclick="location= '?do=lock&user_id=<?php echo $v[user_id]?>'">锁定</button>
+                    <?php } ?>
+
+                    <button class="btn btn-info btn-xs" data-user-id="<?php echo $v['user_id']?>" data-toggle="modal" data-target="#modify_user">编辑</button>
+                    <button class="btn btn-danger btn-xs" onclick="delUser('<?php echo $v[user_id]?>')">删除</button>
+                    <button class="btn btn-success btn-xs" onclick="window.open('cdk.php?search=<?php echo $v[user_id]?>')">充值记录</button>
+                </td>
+            </tr>
+            <?php }?>
+            </tbody>
+        </table>
+        <div>
+            <?php echo $page->getPageHtml()?>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="modify_user">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                <h4 class="modal-title">编辑会员</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="password" class="control-label">密码:</label>
+                        <input class="form-control" id="password" name="pwd" placeholder="请输入新密码" type="text">
+                        <!--<div class="input-group">
+
+                            <div class="input-group-addon">个</div>
+                        </div>-->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-submit="">确认修改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script>
+    var qqList = '<?php echo join(",",$qq)?>';
+    $.post('../api/getqqinfo.php?qq='+qqList,function (res) {
+        if(res.status){
+            $.each(res.data,function (k,v) {
+                $('[data-qq="'+k+'"] [data-nickname]').text(v.nickname);
+                $('[data-qq="'+k+'"] [data-headimg] img').attr('title',v.nickname);
+            })
+        }
+    })
+</script>

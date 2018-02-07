@@ -1,0 +1,65 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    background: #fff;
+    font-family: 'Microsoft YaHei';
+}
+.protective{
+    position: fixed;
+    background: #000;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: .6;
+    z-index: 99999;
+}
+.prompt{
+    position: fixed;
+    background: #F8F8F8;
+    width: 80%;
+    /*max-height: 250px;*/
+    border-radius: 7px;
+    /*box-shadow: 0 2px 10px #ccc;*/
+    /*border: 1px solid #ccc;*/
+    left: 0;
+    right: 0;
+    top:20%;
+    margin: 0 auto;
+    z-index: 100000;
+    max-width: 720px;
+}
+.prompt .content{
+    min-height: 50px;
+    max-height: 250px;
+    padding: 20px;
+    text-align: center;
+    overflow: hidden;
+
+}
+.prompt .content .title{
+    font-weight: bold;
+}
+.prompt .content .con{
+    font-size: 13px;
+    padding: 10px 0 5px;
+    line-height: 20px;
+}
+.prompt .error_sub{
+    text-align: center;
+    border-top:1px solid #D1D1D1;
+    height: 40px;
+}
+.prompt .error_sub button{
+    background: transparent;
+    width: 100%;
+    color: #1D76DE;
+    height: 40px;
+    border: 0;
+    font-weight: 700;
+    font-size: 18px;
+}
