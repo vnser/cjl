@@ -1,0 +1,321 @@
+body {
+    background: #ececec;
+    font-family: microsoft yahei !important;
+    max-width: 700px;
+    margin: 75px auto;
+    font-size: 14px;
+}
+
+.tip {
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #323232;
+    padding: 10px;
+    opacity: .6;
+    position: fixed;
+    z-index: 1000;
+    font-size: 9pt;
+    max-width: 700px;
+    margin: 0 auto;
+}
+.tip .gongao{
+    font-weight: 800;
+    /* text-decoration: underline; */
+    color: #41B883;
+    /*font-size: 14px;*/
+    border-bottom: 1px solid;
+    display: inline-block;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    word-break: break-all;
+}
+.tip, .tip a {
+    color: #fff
+}
+
+.list {
+    background: #fff;
+    padding: 10px;
+    margin: 15px 5px;
+    border: none !important;
+    border-radius: 5px
+}
+
+.list .title {
+    color: #666;
+    font-size: 14px
+}
+
+.list .down {
+    text-align: center;
+    color: #666;
+    font-size: 14px
+}
+
+.list .video {
+    position: relative
+}
+
+.list .video i {
+    position: absolute;
+    top: 40%;
+    left: 43%;
+    right: 0
+}
+
+.list .video img {
+    width: 100%
+}
+
+.sub {
+    padding: 0 10px;
+    display: inline-block;
+    line-height: 26px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 9pt
+}
+
+.seach {
+    background: #fff;
+    margin: 0 5px 10px;
+    padding: 15px;
+    color: #666;
+    box-shadow: 1px 1px 20px #ccc;
+    font-size: 14px
+}
+
+.seach input[type=text] {
+    background: 0 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    height: 28px;
+    width: 60%;
+    padding-left: 10px
+}
+
+.page {
+    position: fixed;
+    background: #fff;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    color: #666;
+    bottom: 0;
+    right: 0;
+    opacity: .7
+}
+
+.modal_video .shadow {
+    position: fixed;
+    background: #000;
+    opacity: .8;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    left: 0
+}
+
+.modal_video .video {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 30%;
+    margin: 0 20px;
+    background: 0 0
+}
+
+.modal_video .video video {
+    max-height: 300px
+}
+
+.modal_video .close {
+    position: fixed;
+    top: 22%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    opacity: inherit;
+    font-weight: inherit
+}
+
+.modal_video .close button {
+    width: 75pt;
+    background: 0 0;
+    border: 1px solid #fff
+}
+
+.modal_video .fly_title {
+    position: fixed;
+    top: 85%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #fff;
+    z-index: 555;
+    font-size: 14px
+}
+
+.menu {
+
+    margin-bottom: 10px
+}
+/*.menu:first-child{
+    margin-top: 100px;
+}*/
+.menu, .menu ul {
+    background: #fff
+}
+
+.menu ul {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    max-height: 90pt;
+    overflow: auto
+}
+
+.menu ul li {
+    float: left;
+    margin: 5px;
+    text-align: center;
+    background: #1e9fff;
+    color: #fff;
+    font-size: 9pt;
+    padding: 5px 4px;
+    border-radius: 2px
+}
+
+.menu ul li a {
+    color: #fff;
+    text-decoration: none
+}
+.server{
+    margin-top: 116px;
+}
+.server ul li {
+    background: #eee;
+    color: #666;
+    font-size: 14px;
+    padding: 5px;
+    margin: 4px;
+    /*width: 28%;*/
+    width: 30.5%;
+    word-wrap: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.server ul li.action {
+    color: #52ade6
+}
+
+.login .keep {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+    z-index: 499;
+    opacity: .7
+}
+
+.login .form-input {
+    position: fixed;
+    top: 26%;
+    left: 0;
+    right: 0;
+    height: 178px;
+    background: #eee;
+    z-index: 500;
+    width: 80%;
+    margin: 0 auto;
+    border-radius: 5px;
+    max-width: 720px;
+}
+
+.login .form-input .title {
+    color: #515151;
+    margin: 10px auto;
+    text-align: center
+}
+
+.login .form-input .put {
+    overflow: hidden
+}
+
+.login .form-input .put label {
+    width: 60px;
+    display: inline-block;
+    text-align: right;
+    font-size: 14px;
+    color: #52ade6
+}
+
+.login .form-input .put:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px
+}
+
+.login .form-input .put input:first-child {
+    border-bottom: 1px solid #eee
+}
+
+.login .form-input .put input {
+    border: 0;
+    width: 100%;
+    background: #fff;
+    font-size: 14px;
+    padding-left: 5px;
+    height: 40px
+}
+
+.login .form-input .sub {
+    text-align: center;
+    width: 100%;
+    padding: 10px 0
+}
+
+.login .form-input .sub button {
+    background: #52ade6;
+    color: #fff;
+    border: 0;
+    width: 100px;
+    height: 30px;
+    border-radius: 4px
+}
+.information{
+    color:#F0DB4F ;
+}
+.information .info{
+    display: inline-block;
+    overflow: hidden;
+}
+.information .nickname{
+    max-width: 18%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+}
+.information .headimg{
+    position: relative;
+    top: -6px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%
+}
+.information .operation button{
+    margin: 0 3px;
+}

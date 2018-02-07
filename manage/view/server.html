@@ -1,0 +1,152 @@
+<?php include('top.html');?>
+
+</head>
+<div class="container">
+    <?php include('menu.html')?>
+
+    <div class="container_con">
+
+        <div class="table-responsive">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>server name</th>
+                <th>video host</th>
+                <th>image host</th>
+                <th>site host</th>
+                <th>使用video host</th>
+                <th>使用image host</th>
+                <th>资源数</th>
+                <th>访问状态</th>
+                <!--<th>最后登录时间</th>-->
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if(!$server){?>
+            <tr>
+                <td colspan="20">
+                    <div class="alert alert-warning" role="alert">暂无数据.</div>
+                </td>
+            </tr>
+            <?php }?>
+
+            <?php foreach($server as $v){?>
+            <tr data-server-id="<?php echo $v['id']?>" data-data="<?php echo fullescape(json_encode($v));?>">
+                <th><?php echo $v['id']?></th>
+                <th><?php echo $v['name']?></th>
+                <td><?php echo ($v['video_host'])?></td>
+                <td><?php echo $v['img_host']?></td>
+                <td><?php echo $v['site_host']?></td>
+                <td><span class="label label-<?php echo ($v['use_video']?'success':'warning')?>"><?php echo ($v['use_video']?'是':'否')?></span></td>
+                <td><span class="label label-<?php echo ($v['use_image']?'success':'warning')?>"><?php echo ($v['use_image']?'是':'否')?></span></td>
+                <td data-vcount=""><span class="label label-info">0</span></td>
+                <td data-req=""><button type="button" class="btn btn-default btn-sm" data-container="body" data-toggle="popover"  data-content="">0</button></td>
+                <td>
+                    <button class="btn btn-info btn-xs" data-user-id="<?php echo $v['user_id']?>" data-toggle="modal" data-target="#modify_server">编辑</button>
+                </td>
+            </tr>
+            <?php }?>
+            </tbody>
+        </table>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="modify_server">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                <h4 class="modal-title">修改服务器</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label class="control-label">名称:</label>
+                        <input class="form-control" name="name" placeholder="请输入服务器" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">图片host:</label>
+                        <input class="form-control" name="img_host" placeholder="请输入图片host" type="text">
+                        <div>
+                            是否使用该地址: <input type="radio" name="use_image" value="1">使用 <input type="radio" name="use_image" value="0">不使用
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">视频host:</label>
+                        <input class="form-control" name="video_host" placeholder="请输入视频host" type="text">
+                        <div>
+                            是否使用该地址: <input type="radio" name="use_video" value="1">使用 <input type="radio" name="use_video" value="0">不使用
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">取源host:</label>
+                        <input class="form-control" name="site_host" placeholder="请输入取源host" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">引用协议:</label>
+                        <input class="form-control" name="scheme" placeholder="请输入引用协议" type="text">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">是否下载该服务器的视频:</label>
+                        <input type="radio" name="is_down" value="1">是 <input type="radio" name="is_down" value="0">否
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">界面排序号:</label>
+                        <input class="form-control" name="sort" placeholder="请输入排序号" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">是否隐藏该服务器:</label>
+                        <input type="radio" name="hide" value="1">隐藏 <input type="radio" name="hide" value="0">不隐藏
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-submit="">确认修改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script type="text/javascript">
+    $(function () {
+        $('#modify_server').on('show.bs.modal', function (event) {
+            var $button = $(event.relatedTarget); // Button that triggered the modal
+            var data = JSON.parse(decodeURIComponent($button.parents('tr').data('data')));
+            var $modal = $(this);
+            $.each(data,function (k,v) {
+                var $val = $modal.find('[name='+k+']');
+                if('radio' === $val.attr('type')){
+                    $val.siblings('[value='+v+']').prop('checked',true);
+                    return true;
+                }
+                $val.val(v);
+            });
+            $('[data-submit]').unbind('click').click(function () {
+                $.post('?do=modify&server_id='+data.id,$modal.find('form').serialize(),function (res) {
+                    alert(res.code);
+                    location.reload();
+                })
+            });
+        });
+        var $server = $('tr[data-server-id]');
+        $server.each(function (k,v) {
+            var $this = $(this);
+            $.post('?do=get_data',{server_id:$(this).data('server-id')},function (res) {
+                $this.find('[data-vcount] span').text(res.video_count+'部');
+                $this.find('[data-req] button').attr('data-content',res.req_res);
+                $this.find('[data-req] button').text(res.req_code);
+
+            });
+        });
+
+        $('[data-toggle="popover"]').popover({
+            template : '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><pre><code class="popover-content"></code></pre></div>'
+        });
+    });
+</script>

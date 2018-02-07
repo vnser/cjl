@@ -1,0 +1,39 @@
+<div class="menu">
+    <h3>VJL管理后台<span class="label label-info">Vnser</span></h3>
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="index.php">首页</a></li>
+        <!--<li role="presentation"><a href="#">卡密管理</a></li>-->
+
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                卡密管理 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="cdk.php"> 卡密列表</a></li>
+                <li><a href="cdk.php?do=create_cdk"> 生成卡密</a></li>
+            </ul>
+        </li>
+        <li role="presentation" class="dropdown">
+            <!--<a href="#">会员管理</a>-->
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                会员管理 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="user.php"> 会员列表</a></li>
+                <li><a href="user.php?do=create_user"> 生成会员</a></li>
+            </ul>
+        </li>
+
+        <li role="presentation">
+            <!--<a href="#">会员管理</a>-->
+            <a  href="download.php" role="button" >
+                下载任务
+            </a>
+           <!-- <ul class="dropdown-menu">
+                <li><a href="user.php"> 会员列表</a></li>
+                <li><a href="user.php?do=create_user"> 生成会员</a></li>
+            </ul>-->
+        </li>
+        <li role="presentation"><a href="server.php">取源服务器</a></li>
+    </ul>
+</div>

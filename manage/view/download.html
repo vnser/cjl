@@ -1,0 +1,154 @@
+<?php include('top.html');?>
+<script type="text/javascript">
+    $(function () {
+
+        try{
+            $('[name="status"] [value="<?php echo $status;?>"]')[0].selected = true;
+            $('[name="order"] [value="<?php echo $order;?>"]')[0].selected = true;
+        }catch (e){}
+
+    });
+    function delLoad(id) {
+        if(confirm('确认要删除该任务吗？')){
+            location = 'download.php?do=del&id='+id;
+        }
+    }
+</script>
+<style>
+    .down_msg{
+        overflow: hidden;
+        margin: 0;
+        height: 106px;
+        width: 200px;
+        border-radius: 6px;
+        border: 1px dotted #ccc;
+        color: #666;
+        font-size: 14px;
+        word-break: break-all;
+
+    }
+</style>
+</head>
+<div class="container">
+    <?php include('menu.html')?>
+
+    <div class="container_con">
+        <div style="padding: 15px 5px 0">
+            <form class="form-inline search" >
+                <div class="form-group">
+                    <label>状态</label>
+                    <select name="status" class="form-control">
+                        <option value="">请选择</option>
+                        <option value="0">等待下载</option>
+                        <option value="1">下载成功</option>
+                        <option value="2">下载失败</option>
+                        <option value="3">正在下载</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>排序</label>
+                    <select name="order" class="form-control">
+                        <!--<option value="">请选择</option>-->
+                        <option value="0">任务倒序</option>
+                        <option value="1">任务正序</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>关键字</label>
+                    <input size="50" name="search" class="form-control" value="<?php echo $search;?>" placeholder="video_id,v.id">
+                </div>
+                <button class="btn btn-info">搜索</button>
+            </form>
+
+        </div>
+        <div class="table-responsive">
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>视频ID</th>
+                <th>任务创建时间</th>
+                <th>下载状态</th>
+                <th>错误信息</th>
+                <th style="width: 20%;">标题</th>
+                <th>时长</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if(!$download){?>
+            <tr>
+                <td colspan="20">
+                    <div class="alert alert-warning" role="alert">暂无数据.</div>
+                </td>
+            </tr>
+            <?php }?>
+
+            <?php foreach($download as $v){?>
+            <tr>
+                <td><?php echo $v['video_id']?></td>
+                <td><?php echo date('Y-m-d H:i:s',$v['create_task_time'])?></td>
+                <td><?php switch( $v['down_status']){
+                    case -1:
+                        echo '<span class="label label-default">未进行</span>';break;
+                    case 0:
+                        echo '<span class="label label-info">等待下载</span>'; break;
+                    case 1:
+                        echo '<span class="label label-success">下载成功</span>'; break;
+                    case 2:
+                         echo '<span class="label label-danger">下载失败</span>';break;
+                    case 3:
+                        echo '<span class="label label-warning">下载中...</span>'; break;
+                }?>
+                </td>
+                <td>
+                <?php if($v['down_msg']){ ?>
+                    <textarea class="down_msg"><?php echo $v['down_msg']?></textarea>
+                <?php } ?>
+                </td>
+                <td><?php echo $v['title']?></td>
+                <td><?php echo ($v['video_time'])?></td>
+                <td>
+                    <?php if($v['down_status'] == 2){?>
+                    <button class="btn btn-success btn-xs" onclick="location.replace('?do=reload&id=<?php echo $v[coll_id]?>')">重试</button>
+                    <?php }?>
+                    <button class="btn btn-danger btn-xs" onclick="delLoad('<?php echo $v[coll_id]?>')">删除任务</button>
+                </td>
+            </tr>
+            <?php }?>
+            </tbody>
+        </table>
+        <div>
+            <?php echo $page->getPageHtml()?>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="modify_user">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                <h4 class="modal-title">编辑会员</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="password" class="control-label">密码:</label>
+                        <input class="form-control" id="password" name="pwd" placeholder="请输入新密码" type="text">
+                        <!--<div class="input-group">
+
+                            <div class="input-group-addon">个</div>
+                        </div>-->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-submit="">确认修改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

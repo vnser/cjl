@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>VJL在线</title>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="static/css/weui.min.css" rel="stylesheet"/>
+    <link href="static/css/jquery-weui.min.css" rel="stylesheet"/>
+    <link href="static/css/vjl.css?v=<?php echo VERSION;?>" rel="stylesheet"/>
+    <script src="static/js/jq.min.js?visitDstTime=1" type="application/javascript"></script>
+    <script src="static/js/jq.lazyload.min.js?visitDstTime=1" type="application/javascript"></script>
+    <script src="static/js/jquery-weui.min.js?visitDstTime=1" type="application/javascript"></script>
+    <script src="static/js/fastclick.js?visitDstTime=1" type="application/javascript"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js?visitDstTime=1" type="text/javascript"></script>
+    <script type="text/javascript">var _so_url = '<?php echo url(["so"=>""]); ?>', _ser_id = '<?php echo $server_id?>', _bind_qq = '<?php echo ($user["qq"]?"":1)?>', _login = '<?php echo ($login_flag?1:"")?>',_qq = '<?php echo $user["qq"]?>';</script>
+    <script src="static/js/vjl.js?v=<?php echo VERSION;?>" type="application/javascript"></script>
+</head>
+<body>
+<?php if(!$login_flag){ ?>
+<div class="login" style="display: none">
+    <div class="keep"></div>
+    <div class="form-input">
+        <div class="title">
+            VJL.手机在线.无广告
+        </div>
+        <div class="put">
+            <input type="number" name="id" placeholder="请输入账号">
+        </div>
+        <div class="put">
+            <input type="password" name="pwd" onkeydown="event.keyCode===13?login():''" placeholder="请输入密码">
+        </div>
+        <div class="sub">
+            <button type="button" onclick="login()" style="margin-right: 10px"><i class="fa fa-send"></i> 登录</button>
+            <button type="button" style="background: green" onclick="location='https://jq.qq.com/?_wv=1027&k=4C5s1J7'">
+                <i class="fa fa-question-circle"></i> 没有账号
+            </button>
+        </div>
+    </div>
+</div>
+</body></html>
+<?php exit();} ?>
+
+
+<div class="tip">
+    <span class="gongao" >公告：官方售后QQ群号：658842865【<a href="https://jq.qq.com/?_wv=1027&k=4C5s1J7">点击加群</a>】,有任何维护、问题、账号注册、都可以在群里咨询,请及时添加！</span>
+    <!--<br>声明: 内容来自于网络程序捕获,与本人无关！by: Vnser(唯灵)-->
+    <div class="information">
+
+        <?php if($user['qq']){?>
+        <img class="headimg" src="http://q2.qlogo.cn/headimg_dl?dst_uin=<?php echo $user['qq']?>&spec=100&url_enc=0&referer=bu_interface&term_type=P"> <span class="nickname"></span><?php } ?>
+        <span class="info">| <i class="fa fa-user"></i> 账号: <?php echo $user['user_id']?> | <i class="fa fa-clock-o"></i> 剩余: <?php
+          $rema = (strtotime($user['expire_time'])-time());
+          $hou = $rema/3600;
+          $day = $hou/24;
+          $day1 = round($day);
+
+          $hous = abs($day-$day1)*24;
+          echo $day1;
+        ?>天<?php echo round($hous,1)?>时</span>
+
+        <div class="operation">
+            <button class="btn btn-info btn-xs" onclick="recharge()"><i class="fa fa-credit-card"></i> 充值时长</button>
+            <button class="btn btn-success btn-xs" onclick="modifyPass()"><i class="fa fa-cog"></i> 修改密码</button>
+            <button class="btn btn-default btn-xs" id="outLogin"><i class="fa fa-sign-out"></i> 注销登录</button>
+        </div>
+    </div>
+</div>
+<?php echo $iframe?>
+<div class="menu server">
+    <ul>
+        <li style="background:#515151;color:#fff;" onclick="location='/'"><i class="fa fa-random"></i> 随机全部</li>
+        <li style="background: #7FBD42;color: #fff" onclick="location='?all'"><i class="fa fa-cloud"></i> 全部资源</li>
+        <li style="background: #FE2C55;color: #fff;" onclick="location='?digest'"><i class="fa  fa-heart-o"></i> 精选资源</li>
+        <li style=" background: #66CCFF;color: #fff" onclick="location='?local'"><i class="fa fa-hdd-o"></i> 极速专区</li>
+        <?php foreach($server as $k=>$v){ ?>
+        <li id="ser_id<?=$v['id']?>" onclick="location = '?server_id=<?=$v[id]?>'"> <i class="fa fa-server"></i> Ser-<?php echo $v['name'];?></li>
+        <?php } ?>
+    </ul>
+</div>
+<?php if(is_array($type_list)){?>
+<div class="menu">
+    <ul>
+        <?php foreach($type_list as $k=>$v):?>
+        <li>
+            <a href="<?php echo url(['type_id'=>$v['id']]);?>"><?php echo $v['name'] ?></a>
+        </li>
+        <?php endforeach;?>
+
+    </ul>
+</div>
+<?php } ?>
+<div class="seach">
+    搜资源 <input type="text" id="so" placeholder="请输入搜索名称关键字" value="<?php echo $_GET['so']?>">
+
+    <button type="button" class="sub" onclick="so()" style="line-height: 30px;background: #663399;"><i
+            class="fa fa-search"></i> 搜索
+    </button>
+</div>
+
+<?php foreach($result as $v){ ?>
+<div class="list">
+    <?php
+                $image_url = '';
+                if($v['local']){
+                    $image_url = 'http://'.$config['VIDEO_DOMAIN'].$v['video_img'];
+                }else{
+                    if($v['use_image']){
+                        $image_url = $v['scheme'].$v['img_host'].$v['video_img'];
+                    }else{
+                        $image_url = $v['video_img'];
+                    }
+                }
+
+            ?>
+    <?php $time_0 = $v['video_time'] == '00:00';?>
+    <div class="video play_v" data-title="<?php echo $v[title] ?>" data-is-stime="<?php echo $time_0?>" data-vid="<?php echo $v[id];?>">
+        <img data-original="<?php echo $image_url;?>" title="<?php echo $v[title]?>">
+        <i class="fa fa-youtube-play" style="font-size: 50px;color: #ccc"></i>
+    </div>
+    <div class="title"><?php if($v['digest']){?><span class="label label-primary" style="background: #FE2C55">精选</span> <?php } if($v['local']){?> <span class="label label-primary" style="background: #515151">极速</span> <?php } echo $v['title'] ?></div>
+    <p class="down">
+        <i class="fa fa-clock-o"></i> 时长: <span class="v_time_<?php echo $v[id];?>"><?php echo $v['video_time'] == '00:00'?'无':$v['video_time']?></span> <i
+            class="fa fa-server"></i> 服务器:<?php echo $v['s_name']?>
+    <div style="text-align: center">
+        <!-- <a style="background: #449d44" class="sub" onclick="window.open(getVideoUrl('<?php echo $v[id];?>'));action = 'down'"><i class="fa fa-cloud-download"></i> 下载视频</a>-->
+        <?php $is_admin = (isManage($user['user_id'])); if($is_admin){ if($v['digest']){?>
+
+       <a style="background: #ccc" class="sub" onclick="addDigest('<?php echo $v[id];?>')"><i class="fa fa-star-o"></i> 取消精选</a>
+        <?php }else{ ?>
+       <a style="background: #FE2C55" class="sub" onclick="addDigest('<?php echo $v[id];?>')"><i class="fa fa-star"></i> 标记精选</a>
+        <?php } ?>
+
+        <a style="background: #449d44" class="sub" onclick="createDownTask('<?php echo $v[id];?>')"><i
+                class="fa fa-download"></i> 添加下载任务</a>
+        <a style="background: red" class="sub" onclick="(delVideo('<?php echo $v[id];?>'))"><i
+                class="fa fa-trash-o"></i> 删除</a>
+
+        <?php } ?>
+    </div>
+    </p>
+
+</div>
+<?php } ?>
+
+<div class="page">
+    <a href="<?php echo url(['page'=>$now_page-1])?>" class="sub" style="background: #515151;border-radius: 0">first</a>
+    <a href="<?php echo url(['page'=>($now_page+1)])?>" class="sub" style="background: #515151;border-radius: 0">next</a>
+    页码:<?php echo $now_page?>/<?=$total_page?>页;共<?=$count['count']?>个视频
+</div>
+
+<div class="modal_video" style="display: none">
+    <div class="shadow"></div>
+    <div class="video">
+        <video width="100%" controls="" src="http://" id="videos">
+            <!--<source id="video_src" src="http://" type="video/mp4">-->
+        </video>
+    </div>
+    <div class="close">
+        <button class="sub" onclick="close_video()"><i class="fa fa-times"></i> 关闭</button>
+    </div>
+    <div class="fly_title">
+        <marquee scrollamount="2">
+            正在播放:<span class="video_title"></span>
+        </marquee>
+    </div>
+</div>
+</body>
+</html>
+<?php if(empty($user['qq'])){?>
+<div class="modal fade" tabindex="5000" style="z-index: 1500" role="dialog" id="bind_qq">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                <h4 class="modal-title"><i class="fa fa-cog"></i> 绑定QQ邮箱</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="qq" class="control-label"><i class="fa fa-envelope-o"></i> QQ邮箱</label>
+                        <div class="input-group">
+                            <input class="form-control" id="qq" placeholder="请输入您的QQ号" type="number">
+                            <div class="input-group-addon">@qq.com</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="validation" class="control-label"><i class="fa fa-terminal"></i> 验证码(<span style="color:red;"> * 提示: 收件邮箱中“收件箱”,如果没找到验证码邮件,请查阅“垃圾箱”中的邮件.</span>)</label>
+
+                            <div class="row">
+                                <div class="col-xs-8" style="padding-right: 0">
+                                    <input class="form-control" id="validation" placeholder="请输入验证码" type="number">
+                                </div>
+                                <div class="col-xs-4" style="padding-left: 5px">
+                                    <button type="button" class="btn btn-success" style="width: auto" id="send_validation">发送验证码</button>
+                                </div>
+                            </div>
+
+                            <!--<div class="input-group-addon">@qq.com</div>-->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!--<button type="button" class="btn btn-default">关闭</button>-->
+                <button type="button" class="btn btn-primary" id="bindqq_btn"><i class="fa fa-circle-o-notch"></i> 确认绑定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<?php } ?>
+<script type="application/javascript">
+    $(function() {
+        FastClick.attach(document.body);
+    });
+</script>

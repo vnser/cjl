@@ -1,0 +1,67 @@
+<?php include('top.html');?>
+    <script type="text/javascript">
+        $(function () {
+            $('#create_cdk').modal().unbind('click');
+            $('#create_btn').click(function () {
+                var num = $('#num').val();
+                var day = $('#day').val();
+                var classify = $('#classify').val();
+                if(num <= 0){
+                    alert('请输入正确的生成数量!');
+                    return false;
+                }
+                if(day <= 0){
+                    alert('请输入正确的生成天数!');
+                    return false;
+                }
+                $.post('?do=create_cdk',{num:num,day:day,classify:classify},function (res) {
+                    alert(res.code);
+                    location.replace('cdk.php?do=down_new_cdk&key='+res.key);
+                })
+            });
+        })
+    </script>
+</head>
+<body>
+<div class="modal fade" tabindex="-1" role="dialog" id="create_cdk">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+           <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+            <h4 class="modal-title">生成卡密</h4>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label for="day" class="control-label">天数:</label>
+                    <div class="input-group">
+                        <input class="form-control" id="day" placeholder="请输入生成卡密天数" type="number">
+                        <div class="input-group-addon">天</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="num" class="control-label">个数:</label>
+                    <div class="input-group">
+                        <input class="form-control" id="num" placeholder="请输入生成个数" type="number" value="1">
+                        <div class="input-group-addon">个</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="num" class="control-label">分类:</label>
+                    <input class="form-control" id="classify" placeholder="请输入卡密分类" type="text" value="default">
+                  <!--  <div class="input-group">
+                        <input class="form-control" id="num" placeholder="请输入生成个数" type="number" value="10">
+                        <div class="input-group-addon">个</div>
+                    </div>-->
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="history.go(-1)">返回上一页</button>
+            <button type="button" class="btn btn-primary" id="create_btn">确认生成</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</body>
+</html>
